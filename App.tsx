@@ -1,4 +1,5 @@
 import React from 'react';
+import { AppRegistry } from 'react-native';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,7 +9,7 @@ import HomeScreen from './screens/HomeScreen';
 const Stack = createNativeStackNavigator();
 
 const client = new ApolloClient({
-  uri: 'https://localhost:4000/graphql',
+  uri: 'http://localhost:4000/graphql',
   cache: new InMemoryCache()
 });
 
@@ -28,3 +29,4 @@ export default function App() {
     </ApolloProvider>
   );
 }
+AppRegistry.registerComponent('MyApplication', () => App);
