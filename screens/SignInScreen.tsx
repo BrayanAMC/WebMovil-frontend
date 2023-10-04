@@ -1,37 +1,26 @@
-import React from 'react';
+import axios from 'axios';
 import { useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { ENDPOINT_MS_USER } from 'react-native-dotenv';
 import { useUserStore } from '../stores/useUserStore';
 
-import { useMutation, gql } from '@apollo/client';
-
-const POST_USER= gql`
-mutation postUser($email: String!, $password: String!) {
-  login(input:{
-    name: $email
-    email: $password
-  })
-}`;
-
-
 const SignInScreen = ({ navigation }: any) => {
-  const [email, setEmail] = useState('diego@gmail.com');
-  const [password, setPassword] = useState('1234');
+  const [email, setEmail] = useState('diego.ramirez@ce.ucn.cl');
+  const [password, setPassword] = useState('12345');
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { accessToken, setAccessToken } = useUserStore();
-  
-  const [signInMutation] = useMutation(POST_USER);
 
   const signInRequest = async (email: string, password: string) => {
     setError(false);
 
     try {
-      const response = await signInMutation({
-        variables: { email, password },
+      const response = await axios.post('http://localhost:4001/user/sign-in', {
+        email,
+        password,
       });
-      console.log(response)
-      const accessToken = response.data.login ;
+
+      const accessToken = response?.data?.accessToken || '';
       setAccessToken(accessToken);
       navigation.navigate('Home');
     } catch (e: any) {
@@ -45,7 +34,7 @@ const SignInScreen = ({ navigation }: any) => {
     <View style={styles.container}>
       <Text>Email</Text>
       <TextInput
-        placeholder="email@email.com"
+        placeholder="email@email.cl"
         value={email}
         inputMode="email"
         onChangeText={(text: string) => setEmail(text)}
